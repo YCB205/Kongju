@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>나를 소개하다</title>
+        <style>
+            html, body {height: 100%; width: 100%; margin-top: 0px; margin-left: 0px;}
+            .scroll::-webkit-scrollbar {display: none;}
+            #header{z-index: 10; position: absolute; width: 100%;}
+            #header>#audioPlayer{position: absolute; right: 90px;  width: 200px; top: 8px; }
+            #header>#audio{position: absolute; right: 300px; top: 9px; display: inline-block;}
+            #header>#audio>#song{width: 50px; border-style: none; border-radius: 25%; height: 50px;}
+
+            #footer{z-index: 10; position: absolute; width: 100%; bottom: 0px;}
+            #footer>div{position: absolute; color: rgb(0, 0, 0); right: 30px; bottom: 0px;}
+            .sidebar {height: 100%; width: 0px;position: fixed;z-index: 20; top: 0; right: 0;background-color: #111;overflow-x: hidden; 
+                transition: 0.5s;/*펼침속도*/
+                padding-top: 60px;}
+            .sidebar a {padding: 8px 8px 8px 32px;text-decoration: none;font-size: 20px;color: #818181; display: block; transition: 0.3s;}
+    
+            /*메뉴열기 hover 시*/
+            .sidebar a:hover {color: #f1f1f1;}
+            .sidebar .closebtn {position: absolute;top: 0; right: 25px; font-size: 36px; margin-left: 50px;}
+            .openbtn {font-size: 15px; cursor: pointer; background-color: #111; color: white; padding: 10px 15px; border: none; position: fixed; top: 10px; right: 10px; z-index: 10;}
+            .openbtn:hover {background-color: #747474;}
+    
+            
+            .pages {
+                height: 100vh;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .page {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                bottom: -100%;
+                transition: bottom .7s;
+            
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            
+            }
+
+            .page:first-child {bottom: 0;}
+
+            .first { background-color: #dbddda;}
+
+            .second {background-color: #8bd1d3;}
+
+            .third {background-color: #eeaf94;}
+
+            .pagination {position: absolute;right: 20px;top: 50%;transform: translateY(-50%);}
+
+            .pagination>li {
+                list-style: none;
+                height: 20px;
+                width: 20px;
+                background: #000000;
+                border-radius: 50%;
+                margin-top: 10px;
+            }
+
+            .pagination>li.active {
+                background: #ffffff;
+            }
+
+            /* 페이지 제목 */
+            .title {
+                width: 100%;
+                position: absolute;
+                top: -5px;
+                left: 100px;
+                display: inline;
+            }
+
+        /* 첫번째 페이지 구성 */
+        .first.page>article{display: flex; justify-content: center; align-items: center; min-height: 100vh;}
+        .first.page>article>.square{ width: 400px; height: 400px; background-color: rgb(255, 255, 255); border-radius: 150px; box-shadow: 0px 0px 1px 3px rgb(55, 56, 55);
+            display: grid; place-items: center;}
+        .repeat_click{position: absolute; top: 330px; font-size: 30px; color: red; animation: blink-effect 1s step-end infinite;}
+        @keyframes blink-effect {50% {opacity: 0;}}
+
+        .first.page>article>.square>h1{text-align: center; font-size: 60px; text-shadow: 2px 2px 0px rgb(101, 149, 201);}
+
+        .keyword{position: absolute; font-size: 60px; font-weight: 50px; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        opacity: 0; transition: opacity 1s ease-in; text-shadow: 0px 3px 0px rgb(192, 192, 192);}
+        .자연어처리{top: 140px; left: 400px;}
+        .규제{top: 400px; left: 250px;}
+        .ai{top: 700px; left: 450px;}
+        .제한{bottom: 100px; left: 840px;}
+        .기술혁명{bottom: 260px; right: 280px;}
+        .편의성{top: 200px; right: 420px;}
+
+        #myCanvas_1 { position: absolute; top: 340px; left: 210px;}
+        #myCanvas_2 { position: absolute; bottom: 38px; left: 800px;}
+
+        /* 두번째 페이지 구성 */
+        .second.page>article>.square{width: 300px; height: 150px; background-color: rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute;  top: 100px; left: 160px; z-index: 2;}
+        .second.page>article>.square>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .second.page>article>.square>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+
+        .second.page>article>.square_mid{width: 400px; height: 200px; background-color: rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute; top: 200px; left: 360px; z-index: 1;}
+        .second.page>article>.square_mid>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .second.page>article>.square_mid>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+
+        .second.page>article>.square_main{width: 800px; height: 600px; background-color:rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute; top: 350px; left: 660px;}
+        .second.page>article>.square_main>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .second.page>article>.square_main>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+
+        .second.page>article>.square_main>.article_main_1{position: absolute; top: 2px; left: 105px; width: 300px; height: 35px; border-top-left-radius: 8px; border-top-right-radius: 8px;
+            color: #000000; background-color: #ffffff; font-size: 20px; text-align: center; font-weight: 900;}
+        .second.page>article>.square_main>.article_review_1{position: absolute; top: 2px; left: 405px; width: 300px; height: 35px; border-top-left-radius: 8px; border-top-right-radius: 8px;
+            color: #000000; background-color: #91968d; font-size: 20px; text-align: center; font-weight: 900;}
+        .second.page>article>.square_main>hr{position: relative; height: 2px; top: 28px; background-color: rgb(255, 255, 255);border : 0; }
+
+        .second.page>.left_img{position: absolute; bottom: 70px; left: 110px; width: 450px; height: 350px; box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);}
+        .second.page>.img_link{position: absolute; bottom: 70px; left: 275px; width: 400px; font-size: 30px; color: #ffffff; text-decoration: none;}
+
+        .second.page>article{line-height:220%; color: #fafafa;}
+        .second.page>article>.square>div>h1{font-size: 35px; padding-top: 25px; padding-left: 10px; text-shadow: 1px 1px 1px rgb(19, 19, 19);}
+        .second.page>article>.square_mid>h2{padding-left: 10px; padding-right: 10px;}
+        .second.page>article>.square_main>h2{font-size: 17px; padding-left: 10px; padding-right: 10px;}
+
+        /* 세번째 페이지 구성 */
+        .third.page>article>.square{width: 300px; height: 150px; background-color: rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute;  top: 100px; left: 160px; z-index: 2;}
+        .third.page>article>.square>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .third.page>article>.square>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+
+        .third.page>article>.square_mid{width: 400px; height: 200px; background-color:rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute; top: 200px; left: 360px; z-index: 1;}
+        .third.page>article>.square_mid>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .third.page>article>.square_mid>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+
+        .third.page>article>.square_main{width: 800px; height: 600px; background-color:rgb(145, 150, 141); border-radius: 15px; box-shadow: 5px 5px 1px  rgb(74, 75, 73);
+            position: absolute; top: 350px; left: 660px;}
+        .third.page>article>.square_main>.circle_1 {position: absolute; top: 10px; right: 30px; width: 15px; height: 15px; border-radius: 50%; background-color: yellow;}
+        .third.page>article>.square_main>.circle_2 {position: absolute; top: 10px; right: 10px; width: 15px; height: 15px; border-radius: 50%; background-color: rgb(255, 81, 0);}
+        .third.page>article>.square_main>.article_main{position: absolute; top: 2px; left: 105px; width: 300px; height: 35px; border-top-left-radius: 8px; border-top-right-radius: 8px;
+            color: #000000; background-color: #ffffff; font-size: 20px; text-align: center; font-weight: 900;}
+        .third.page>article>.square_main>.article_review{position: absolute; top: 2px; left: 405px; width: 300px; height: 35px; border-top-left-radius: 8px; border-top-right-radius: 8px;
+            color: #000000; background-color: #91968d; font-size: 20px; text-align: center; font-weight: 900;}
+        .third.page>article>.square_main>hr{position: relative; height: 2px; top: 28px; background-color: rgb(255, 255, 255);border : 0; }
+
+        .third.page>.left_img{position: absolute; bottom: 70px; left: 110px; width: 400px; box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);}
+        .third.page>.img_link{position: absolute; bottom: 70px; left: 250px; width: 400px; font-size: 30px; color: #eeaf94; text-decoration: none;}
+
+        .third.page>article{line-height:220%; color: #fafafa;}
+        .third.page>article>.square>div>h1{font-size: 50px; padding-top: 15px; padding-left: 10px; text-shadow: 1px 1px 1px rgb(19, 19, 19); }
+        .third.page>article>.square_mid>h2{padding-left: 10px; padding-right: 10px;}
+        .third.page>article>.square_main>h2{font-size: 17px; padding-left: 10px; padding-right: 10px;}
+
+        </style>
+    </head>
+    <body class="scroll">
+        <!--사이드 메뉴 영역-->
+    <div class="sidebar">
+        <a class="closebtn" onclick="closeMenu()">×</a>
+        <a href="./main.html">본인소개</a>
+        <a href="./최근 _주요_사회이슈.html">최근 주요 사회 이슈</a>
+        <a href="./기술_및_기업소개.html">기술 및 기업소개</a>
+        <a href="./미래계획.html">미래 계획</a>
+    </div>
+        <!-- 헤더부분 -->
+        <header id="header">
+            <input type="button" value="Menu" class="openbtn" onclick="openMenu()">
+            <form id="audio">
+                <input type="text" list="songs" id="song" value="sing1" onclick="this.value = null">
+                <datalist id="songs">
+                    <option value="sing1">
+                    <option value="sing2">
+                    <option value="sing3">
+                </datalist>
+            </form>
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="./music/sing1.mp3" type="audio/mpeg">
+            </audio>
+        </header>
+        <!-- 하단부분 -->
+        <footer id="footer">
+            <div><h3>성명: 양창배 <br> 학번: 201905162</h3></div>
+        </footer>
+        <!-- 메인 내용 구성 -->
+        <main>
+            <div class="pages">
+                <div class="first page">
+                    <h1 class="title">최근 주요 사회 이슈</h1>
+                    <article>
+                        <div class="square" onclick="opacity_control()">
+                            <span class="repeat_click">Click!</span>
+                            <h1><b>chatGPT</b></h1>
+                        </div>
+                    </article>
+                    <span class="keyword 자연어처리">자연어처리</span>
+                    <span class="keyword 규제">규제</span>
+                    <span class="keyword ai">AI</span>
+                    <span class="keyword 제한">제한</span>
+                    <span class="keyword 기술혁명">기술혁명</span>
+                    <span class="keyword 편의성">편의성</span>
+
+                    <canvas id="myCanvas_1" width="200px" height="200px"></canvas>
+                    <canvas id="myCanvas_2" width="200px" height="200px"></canvas>
+                </div>
+
+                <div class="second page">
+                    <h1 class="title">최근 주요 사회 이슈</h1>
+                    <article>
+                        <div class="square">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <div><h1>▶ chatGPT 제한</h1></div>
+                        </div>
+                        <div class="square_mid">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <h2><br>대기업, 데이터 유출 우려에 ChatGPT 등 AI 챗봇 툴 사용 금지</h2>
+                        </div>
+                        <div class="square_main">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <div class="article_main_1" onclick="changeReviewButton('article_main_1', 'article_review_1','second_content',`<br>삼성은 데이터 유출이 우려된다는 이유로 직원들이 사내 기계에서 ChatGPT 등 챗봇 툴을 사용하는 것을 금지하거나 제한했다.
+                            만약 이를 위반할 시 해고를 포함한 징계 조취가 있다고 말했다.<br>4월경 직원 엔지니어 들이 내부 소스 코드를 ChatGPT에 업로드했다. 삼성전자 설비 계측과 관련한 소스 코드가 오픈AI 학습 데이터로 입력된 셈이다.
+                            삼성전자는 이 같은 내용을 임직원에 공지하고 ChatGPT 사용에 주의를 당부했다. 'ChatGPT는내용이 입력되는 순간 데이터가 외부 서버에 전송되고 저장돼 회사가 이를 회수하는 게 불가능하다. ChatGPT에 해당 내용이 학습된다면, 민감한 내용이 불특정 다수에게 제공될 수 있다' 라고 설명했다.<br>
+                            이외에도 ChatGPT가 출시되고 몇 달 후인 2월에 JP모건 체이스, 뱅크 오브 아메리카, 씨티그룹을 포함한 일부 월 스트리스 은행들도 삼성전자와 비슷한 이유로 서비스 시용을 금지하거나 제한했다.<br>
+                                기업을 넘어 국가 차원에서 제한을 두는 사례도 있다. 바로 이탈리아다. 이탈리아에서 ChatGPT를 규제하는 가장 큰 부분 중 하나는 '일반정보보호규정(GDPR)'이다. 
+                                이탈리아 정보보호기관(Garante)는 ChatGPT가 머신러닝을 이유로 불 특정인의 개인정보를 법적 근거 없이 무단 수집 및 저장한다는 이유로 설명했다. <br>
+                                대한민국은 ChatGPT를 두고 금지나 제한을 두진 않는 태도를 유지하고 있다.`)">Article</div>
+                            <div class="article_review_1" onclick="changeReviewButton('article_review_1', 'article_main_1','second_content',`<br>이전에는 원하는 정보를 찾기 위해서는 검색어를 넣어서 직접 정보를 찾는 방법이었으나 ChatGPT의 등장으로 대화 형식으로 원하는 정보를 찾을 수 있게 됐다.
+                                우리는 더 손쉽게 정보를 얻을 수 있는 편의성을 얻었지만 정보가 믿을만한 출처에서 나온 것인지 등 진위 여부를 확인하는 과정도 더 중요해져야 한다고 생각한다. <br><br>
+                                ChatGPT는 사용자가 입력하는 정보가 외부 서버에 저장되는 방식이라 이전에 입력한 자료를 회수하는 것은 불가능하다. 정보화 시대에서 정보가 곧 돈과 기술력이 되는 
+                                매우 중요한 자원으로 취급되는 만큼 ChatGPT의 무분별한 사용으로 중요한 자원을 빼앗기는 사태는 미연에 방지해야 한다고 생각한다.<br><br>
+                                기업을 넘어 국가 단위에서도 ChatGPT를 규제하는 경우도 있는 만큼 향후 타 국가의 행동을 주목하면서 대한민국에서도 개인정보보호의 중요성과 새로운 기술의 발전을 두고 조율 있는
+                                정책이 필요하다고 생각한다.`)">Review</div><hr>
+                            <h2 id="second_content"><br>삼성은 데이터 유출이 우려된다는 이유로 직원들이 사내 기계에서 ChatGPT 등 챗봇 툴을 사용하는 것을 금지하거나 제한했다.
+                                만약 이를 위반할 시 해고를 포함한 징계 조취가 있다고 말했다.<br>4월경 직원 엔지니어 들이 내부 소스 코드를 ChatGPT에 업로드했다. 삼성전자 설비 계측과 관련한 소스 코드가 오픈AI 학습 데이터로 입력된 셈이다.
+                                삼성전자는 이 같은 내용을 임직원에 공지하고 ChatGPT 사용에 주의를 당부했다. 'ChatGPT는내용이 입력되는 순간 데이터가 외부 서버에 전송되고 저장돼 회사가 이를 회수하는 게 불가능하다. ChatGPT에 해당 내용이 학습된다면, 민감한 내용이 불특정 다수에게 제공될 수 있다' 라고 설명했다.<br>
+                                이외에도 ChatGPT가 출시되고 몇 달 후인 2월에 JP모건 체이스, 뱅크 오브 아메리카, 씨티그룹을 포함한 일부 월 스트리스 은행들도 삼성전자와 비슷한 이유로 서비스 시용을 금지하거나 제한했다.<br>
+                                    기업을 넘어 국가 차원에서 제한을 두는 사례도 있다. 바로 이탈리아다. 이탈리아에서 ChatGPT를 규제하는 가장 큰 부분 중 하나는 '일반정보보호규정(GDPR)'이다. 
+                                    이탈리아 정보보호기관(Garante)는 ChatGPT가 머신러닝을 이유로 불 특정인의 개인정보를 법적 근거 없이 무단 수집 및 저장한다는 이유로 설명했다. <br>
+                                    대한민국은 ChatGPT를 두고 금지나 제한을 두진 않는 태도를 유지하고 있다.
+                        </h2>
+                        </div>
+                    </article>
+                    <img class="left_img" src="./img/chat_gpt.jpg" alt="ai를 규제하는 그림"><a class="img_link" target='_blank' href="http://www.goodmorningvietnam.co.kr/news/article.html?no=63568">☛출처☚</a>
+                </div>
+
+                <div class="third page">
+                    <h1 class="title">최근 주요 사회 이슈</h1>
+                    <article>
+                        <div class="square">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <div><h1>▶ AI 규제</h1></div>
+                        </div>
+                        <div class="square_mid">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <h2><br>첨단 기술 기업 최고경영자와 연구자들이 인공지능(AI)이 초래할 위험성을 지적하며 개발 일시 중단 촉구</h2>
+                        </div>
+                        <div class="square_main">
+                            <div class="circle_1"></div><div class="circle_2"></div>
+                            <div class="article_main" onclick="changeReviewButton('article_main', 'article_review','third_content',`<br>테슬라(CEO) 최고경영자 일론 머스크 등 첨단 기술 기업 최고경영자와 연구자들이 인공지능(AI)이 초래할 위험성을 지적하며 개발을 한시적으로 중단하라고 촉구했다. 
+                                1000명 이상 경영자와 연구자들은 대화형 인공지능 ChatGPT 등 첨단 인공지능 개발을 6개월 동안 중지하라는 요구를 담은 공개 서한을 발표했다.<br>
+                            대형 학습 모델(LLM)이라고 알려진 알고리즘의 학습 과정을 확인하지 않았을 때 초래될 수 있는 결과는 매우 위험할 수 있다고 공개서한의 강조하고 있다.<br>
+                        이번 공개서신은 인공지능을 영원히 묻어버리자고 제안하는 건 아니다. 보다 안전한 기술 향상을 위해 6개월 동안 정책과 가이드라인을 만들어 수립하자는 것이 정확한 의도라고 할 수 있다.<br>
+                        지금은 중구난방이라 이 미지의 기술이 어디로 튈지 모르니 잠깐 멈춰서 테두리부터 그어놓자는 것이라고도 볼 수 있다.
+                        그러나 공개서한에 서명한 연구자들은 이 서한이 실질적으로는 아무런 효력을 갖지 못하게 될 것이라는 데 표를 던진다.<br>
+                        “이미 물은 엎질러졌습니다. 주워 담는 게 불가능합니다. 기술 개발을 견인하는 힘은 돈과 시간인데, 이미 많은 기업들이 돈과 시간을 어마어마하게 투자했습니다. 
+                        이제 회수를 고민해야 하는데, 개발을 중단할 리가 없습니다. 인공지능 기술을 안전하게 사용하도록 해야지 중단하자고 하는 건 무리입니다.”`)">Article</div>
+                            <div class="article_review" onclick="changeReviewButton('article_review', 'article_main','third_content',`<br>18세기 중반 산업형멱이 시작된 후 기술 발전의 속도는 점차 빨라지고 있다. 나날히 발전해가는 기술에 대응하기 위해서는 
+                                그에 걸맞는 법과 관리가 필요하다고 생각한다. 법과 관리가 있어야만 예상치 못한 방향으로의 잘못된 결과에 예방하거나 대처할 수 있기 때문이다. <br><br>
+                                AI는 기술의 특이점의 시작으로 불릴만큼 매우 무궁무진한 가능성을 지닌 기술로써 가치를 가지고 있다. 다만 양면적인 특성으로 효율적인 작업과 비용절감 등 장점과 
+                                그로 인해 줄어드는 일자리와 사고 발생시 책임론과 같은 단점도 있다. <br><br>
+                                사람들의 관계로 구성된 사회에서 AI가 거부감없이 자연스럽게 녹아드는 과정을 방심하지 않고 주시하면서 능동적인 관리를 해야만 사회 구성원의 호응을 이끌어낼수 있다고 생각한다.`)">Review</div><hr>
+                            <h2 id="third_content"><br>테슬라(CEO) 최고경영자 일론 머스크 등 첨단 기술 기업 최고경영자와 연구자들이 인공지능(AI)이 초래할 위험성을 지적하며 개발을 한시적으로 중단하라고 촉구했다. 
+                                1000명 이상 경영자와 연구자들은 대화형 인공지능 ChatGPT 등 첨단 인공지능 개발을 6개월 동안 중지하라는 요구를 담은 공개 서한을 발표했다.<br>
+                            대형 학습 모델(LLM)이라고 알려진 알고리즘의 학습 과정을 확인하지 않았을 때 초래될 수 있는 결과는 매우 위험할 수 있다고 공개서한의 강조하고 있다.<br>
+                        이번 공개서신은 인공지능을 영원히 묻어버리자고 제안하는 건 아니다. 보다 안전한 기술 향상을 위해 6개월 동안 정책과 가이드라인을 만들어 수립하자는 것이 정확한 의도라고 할 수 있다.<br>
+                        지금은 중구난방이라 이 미지의 기술이 어디로 튈지 모르니 잠깐 멈춰서 테두리부터 그어놓자는 것이라고도 볼 수 있다.
+                        그러나 공개서한에 서명한 연구자들은 이 서한이 실질적으로는 아무런 효력을 갖지 못하게 될 것이라는 데 표를 던진다.<br>
+                        “이미 물은 엎질러졌습니다. 주워 담는 게 불가능합니다. 기술 개발을 견인하는 힘은 돈과 시간인데, 이미 많은 기업들이 돈과 시간을 어마어마하게 투자했습니다. 
+                        이제 회수를 고민해야 하는데, 개발을 중단할 리가 없습니다. 인공지능 기술을 안전하게 사용하도록 해야지 중단하자고 하는 건 무리입니다.”
+                        </h2>
+                        </div>
+                    </article>
+                    <img class="left_img" src="./img/restrict_ai.jpg" alt="ai를 규제하는 그림"><a class="img_link" target='_blank' href="https://www.boannews.com/media/view.asp?idx=116678">☛출처☚</a>
+                </div>
+            </div>
+            <!-- 페이징 -->
+            <ul class="pagination">
+            </ul>
+            
+        </main>
+    
+        <script>
+            //form을 이용한 오디오 선택
+            var songInput = document.getElementById('song');
+            songInput.addEventListener('input', function() {
+                document.getElementById('audioSource').src = `./music/${this.value}.mp3`;
+                document.getElementById("audioPlayer").load()
+            });
+
+            //사이드 메뉴 오픈 함수
+            function openMenu() {
+                document.getElementById("header").style.marginRight = "250px";
+                document.querySelector('.sidebar').style.width = "250px";
+                document.querySelector('.openbtn').style.display = 'none';
+            }
+            //사이드 메뉴 닫기 함수
+            function closeMenu() { 
+                document.getElementById("header").style.marginRight= "0";
+                document.querySelector('.sidebar').style.width = "0";
+                document.querySelector('.openbtn').style.display = 'block';
+            }
+            //원스크롤 페이지
+            window.onload = () => {
+                const Slider = function(pages, pagination) {
+                    let slides = [],
+                        btns = [],
+                        count = 0,
+                        current = 0,
+                        touchstart = 0,
+                        animation_state = false;
+
+                const init = () => {
+                slides = pages.children;
+                count = slides.length;
+                for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = -(i * 100) + '%';
+                    let btn = document.createElement('li');
+                    btn.dataset.slide = i;
+                    btn.addEventListener('click', btnClick)
+                    btns.push(btn);
+                    pagination.appendChild(btn);
+                }
+                btns[0].classList.add('active');
+                }
+
+                const gotoNum = (index) => {
+                if((index != current) && !animation_state) {
+                    animation_state = true;
+                    setTimeout(() => animation_state = false, 500);
+                    btns[current].classList.remove('active');
+                    current = index;
+                    btns[current].classList.add('active');
+                    for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = (current - i) * 100 + '%';
+                    }
+                }
+                }
+
+                const gotoNext = () => current < count - 1 ? gotoNum(current + 1) : false;
+                const gotoPrev = () => current > 0 ? gotoNum(current - 1) : false;
+                const btnClick = (e) => gotoNum(parseInt(e.target.dataset.slide));
+                pages.ontouchstart = (e) => touchstart = e.touches[0].screenY;
+                pages.ontouchend = (e) => touchstart < e.changedTouches[0].screenY ? gotoPrev() : gotoNext();
+                pages.onmousewheel = pages.onwheel = (e) => e.deltaY < 0 ? gotoPrev() : gotoNext();
+
+                init();
+            }
+
+            let pages = document.querySelector('.pages');
+            let pagination = document.querySelector('.pagination');
+            let slider = new Slider(pages, pagination)
+        }
+            //원 만드는 함수
+            function canvas_circle(id_name) {
+                var canvas = document.getElementById(id_name);
+                var context = canvas.getContext("2d");
+
+                var startAngle = 0; // 시작 각도 (라디안)
+                var endAngle = 2 * Math.PI; // 종료 각도 (라디안)
+                var animationDuration = 3000; // 애니메이션 지속 시간 (밀리초)
+                var framesPerSecond = 60; // 초당 프레임 수
+
+                var frameCount = animationDuration / 1000 * framesPerSecond;
+                var angleIncrement = (endAngle - startAngle) / frameCount;
+                var currentAngle = startAngle;
+
+                var animation = setInterval(function () {
+                context.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 클리어
+                context.beginPath();
+                context.arc(100, 100, 75, startAngle, currentAngle);
+                context.closePath();
+                context.strokeStyle = "red";
+                context.lineWidth = 10;
+                context.setLineDash([3, 2]);
+                context.stroke();
+
+                currentAngle += angleIncrement;
+
+                if (currentAngle > endAngle) {
+                    clearInterval(animation);
+                }
+                }, 1000 / framesPerSecond);
+            }
+            //chatGPT 클릭시 동작 함수
+            function opacity_control() {
+                var opacity_control=[];
+                opacity_control = document.querySelectorAll(".keyword");
+                for (let i = 0; i < opacity_control.length; i++) {
+                    opacity_control[i].style.opacity = 1;
+                }
+                document.querySelector(".repeat_click").style.display = "none";
+                canvas_circle("myCanvas_1");
+                canvas_circle("myCanvas_2");
+            }
+            
+            //본문 바꾸는 함수
+            function changeReviewButton(choose_class, other_class,content_class, content) {
+            var choose = document.getElementsByClassName(choose_class)[0];
+            var other= document.getElementsByClassName(other_class)[0];
+            choose.style.backgroundColor = "white";
+            other.style.backgroundColor = "#91968d";
+            document.getElementById(content_class).innerHTML = content;
+        }
+        </script>
+    </body>
+</html>

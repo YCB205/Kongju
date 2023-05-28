@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>나를 소개하다</title>
+        <style>
+            html, body {height: 100%; width: 100%; margin-top: 0px; margin-left: 0px;}
+            .scroll::-webkit-scrollbar {display: none;}
+            #header{z-index: 10; position: absolute; width: 100%;}
+            #header>#audioPlayer{position: absolute; right: 90px;  width: 200px; top: 8px;}
+            #header>#audio{position: absolute; right: 300px; top: 9px; display: inline-block;}
+            #header>#audio>#song{width: 50px; border-style: none; border-radius: 25%; height: 50px;}
+
+            #footer{z-index: 10; position: absolute; width: 100%; bottom: 0px;}
+            #footer>div{position: absolute; color: rgb(0, 0, 0); right: 30px; bottom: 0px;}
+            .sidebar {height: 100%; width: 0px;position: fixed;z-index: 20; top: 0; right: 0;background-color: #111;overflow-x: hidden; 
+                transition: 0.5s;/*펼침속도*/
+                padding-top: 60px;}
+            .sidebar a {padding: 8px 8px 8px 32px;text-decoration: none;font-size: 20px;color: #818181; display: block; transition: 0.3s;}
+    
+            /*메뉴열기 hover 시*/
+            .sidebar a:hover {color: #f1f1f1;}
+            .sidebar .closebtn {position: absolute;top: 0;right: 25px;font-size: 36px;margin-left: 50px;}
+            .openbtn {font-size: 15px;cursor: pointer;background-color: #111;color: white;padding: 10px 15px;border: none; position: fixed; top: 10px; right: 10px; z-index: 10;}
+            .openbtn:hover {background-color: #747474;}
+    
+            
+            .pages {
+                height: 100vh;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .page {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                bottom: -100%;
+                transition: bottom .7s;
+            
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            
+            }
+
+            .page:first-child {bottom: 0;}
+
+            .first { background-color: #ffffff;}
+
+            .second {background-color: #cccccc;}
+
+            .third {background-color: #ffffff;}
+
+            .pagination {position: absolute;right: 20px;top: 50%;transform: translateY(-50%);}
+
+            .pagination>li {
+                list-style: none;
+                height: 20px;
+                width: 20px;
+                background: #000000;
+                border-radius: 50%;
+                margin-top: 10px;
+            }
+
+            .pagination>li.active {
+                background: #f0f0f0;
+            }
+
+            /* 페이지 제목 */
+            .title {
+                width: 100%;
+                position: absolute;
+                top: -5px;
+                left: 100px;
+                display: inline;
+                z-index: 1;
+            }
+
+        /* 첫번째 페이지 구성 */
+        .triangle {position: absolute; top: 6%; left: 0%; width: 500px; height: 80px;  z-index: 1;
+            border-left: 0px solid transparent; border-right: 70px solid transparent; border-top: 80px solid #a6eb9d;}
+        .triangle>div{position: absolute; top: -70px; font-size: 40px; font-weight: 900; left: 10%;}
+        .triangle_r {position: absolute; top: -7%; right: 0%; width: 72%; height: 100px; 
+            border-left: 100px solid transparent; border-right: 0px solid transparent; border-bottom: 90px solid #3e4936;}
+        .first>iframe{position: absolute; top: 12.6%;}
+        .frame>.head{font-size: 40px; font-weight: 800;}
+        .frame_right{position: absolute; top: 23%; right: 10%; width: 550px; height: 700px;
+            background-color: #cdf3ab; border: 2px solid #3e4936; transform: rotate(0deg); box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3); }
+        .frame_right::before {content: ""; position: absolute; top: -30px; left: 50%; width: 30px; height: 50px; background-color: rgb(255, 208, 0); transform: translateX(-50%);}
+        .frame_right>.head{font-size: 35px; font-weight: 800;}
+        .frame_right>.main>span{font-size: 25px; }
+        .frame_right>.main{font-size: 20px; font-weight: 600;  line-height: 140%; padding-left: 2%; padding-right: 2%; padding-top: 1%;}
+
+        /* 두번째 페이지 구성 */
+        .스펙{ width: 100%; height: 100%; position: absolute; }
+        .스펙>.포스터{position: absolute; top: 20%; left: 7%; width: 700px; height: 430px; ; 
+            border: 10px solid; border-color: rgb(0, 0, 0); border-radius: 7%; display: flex; justify-content: center; align-items: center;}
+        .스펙>.포스터>.내각{width: 90%; height: 90%; background-color: rgb(255, 255, 255); font-size: 22px; font-weight: 800; border-radius: 3%;
+            top: 50%;left: 50%; border: 10px solid; border-color: rgb(0, 0, 0); color: whitesmoke;}
+        .스펙>.포스터>.내각>div{margin-top: 1%; margin-left: 2%; margin-right: 2%;}
+        .스펙>.poster_1{opacity: 1; transition: opacity 0.4s; z-index: 1; left: 27.5%; top: 3%; background-color: rgb(105, 89, 92);}
+        .스펙>.poster_1>.내각{background-color: rgb(54, 84, 76);}
+        .스펙>.poster_2{opacity: 1; transition: opacity 0.4s; z-index: 1; left: 3%; top: 52%; background-color: rgb(212, 185, 164);}
+        .스펙>.poster_2>.내각{background-color: rgb(54, 84, 76);}
+        .스펙>.poster_3{opacity: 1; transition: opacity 0.4s; z-index: 1; left: 53%; top: 52%; background-color: rgb(161, 153, 141);}
+        .스펙>.poster_3>.내각{background-color: rgb(54, 84, 76);}
+        .기술_li{margin-bottom: 20px; font-size: 30px;}
+       
+        .스펙{margin-bottom: 10px;}
+        .스펙{margin-bottom: 20px; font-size: 30px;}
+
+        /* 세번째 페이지 구성 */
+
+        .line {position: absolute; width: 23%; height: 18px;  margin: 0 auto; text-align: center; font-size: 24px; font-weight: 800;}
+        .li_r{position: absolute; width: 5px; height: 300px;  margin: 0 auto; }
+        .rec{position: absolute; width: 80px; height: 40px;  margin: 0 auto; }
+        .content{line-height: 180%; font-size: 23px;}
+
+        .li_1 {left: 3%; top: 50%; background-color:  rgb(255, 208, 0); margin: 0 auto;}
+        .li_1>div{margin-top: -15%; color:  rgb(255, 208, 0);}
+        .r_1{right: 0%; bottom: 0%; background-color:  rgb(255, 208, 0)}
+        .re_1{right: 0%; background-color: rgb(255, 208, 0);}
+        .li_1>.content{position: absolute; top: -250px; left: 5%; text-align: left; padding-right: 20%;  color: rgb(255, 208, 0);}
+        .li_1>.content>li>span{color: #000000;}
+
+        .li_2 {left: 26%; top: 50%; background-color: rgb(219, 1, 1); margin: 0 auto;}
+        .li_2>div{margin-top: 4%; color: rgb(219, 1, 1);}
+        .r_2{right: 0%; top: 0%; background-color:  rgb(219, 1, 1);}
+        .re_2{right: 0%; bottom: 0%; background-color: rgb(219, 1, 1);}
+        .li_2>.content{position: absolute; bottom: -250px; left: 5%; text-align: left; padding-right: 20%;  color: rgb(219, 1, 1);}
+        .li_2>.content>li>span{color: #000000;}
+
+        .li_3 {left: 49%; top: 50%; background-color: rgb(0, 132, 255); margin: 0 auto;}
+        .li_3>div{margin-top: -15%; color: rgb(0, 132, 255);}
+        .r_3{right: 0%; bottom: 0%; background-color:  rgb(0, 132, 255);}
+        .re_3{right: 0%; background-color:rgb(0, 132, 255);}
+        .li_3>.content{position: absolute; top: -250px; left: 5%; text-align: left; padding-right: 20%;  color:  rgb(0, 132, 255);}
+        .li_3>.content>li>span{color: #000000;}
+
+        .li_4 {left: 72%; top: 50%; background-color: rgb(113, 201, 31); margin: 0 auto;}
+        .li_4>div{margin-top: 4%; color: rgb(113, 201, 31);}
+        .r_4{right: 0%; top: 0%; background-color:  rgb(113, 201, 31);}
+        .re_4{right: 0%; bottom: 0%; background-color:rgb(113, 201, 31);}
+        .li_4>.content{position: absolute; bottom: -250px; left: 5%; text-align: left; padding-right: 20%;  color: rgb(113, 201, 31);}
+        .li_4>.content>li>span{color: #000000;}
+        
+        </style>
+    </head>
+    <body class="scroll">
+        <!--사이드 메뉴 영역-->
+    <div class="sidebar">
+        <a class="closebtn" onclick="closeMenu()">×</a>
+        <a href="./main.html">본인소개</a>
+        <a href="./최근 _주요_사회이슈.html">최근 주요 사회 이슈</a>
+        <a href="./기술_및_기업소개.html">기술 및 기업소개</a>
+        <a href="./미래계획.html">미래 계획</a>
+    </div>
+        <!-- 헤더부분 -->
+        <header id="header">
+            <input type="button" value="Menu" class="openbtn" onclick="openMenu()">
+            <form id="audio">
+                <input type="text" list="songs" id="song" value="sing1" onclick="this.value = null">
+                <datalist id="songs">
+                    <option value="sing1">
+                    <option value="sing2">
+                    <option value="sing3">
+                </datalist>
+            </form>
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="./music/sing1.mp3" type="audio/mpeg">
+            </audio>
+        </header>
+        <!-- 하단부분 -->
+        <footer id="footer">
+            <div><h3>성명: 양창배 <br> 학번: 201905162</h3></div>
+        </footer>
+        <!-- 메인 내용 구성 -->
+        <main>
+            <div class="pages">
+                <div class="first page">
+                    <h1 class="title">채용 공고</h1>
+                    <div class="triangle"><div>한국도로공사 채용 공고</div></div>
+                    <div class="triangle_r"></div>
+
+                    <iframe width="1120" height="87.4%" src="./pdf/2022년 상반기 신입(인턴)사원 공개채용 공고문.pdf" title="한국도로공사" 
+                    frameborder="0"  allowfullscreen></iframe>
+
+                    <div class="frame_right"><div class="head">▸주요 내용</div>
+                    <div class="main"><br>
+                        <span>지원자격</span><br>
+                        <ul>
+                        <li>병역필 또는 면제자</li>
+                        <li>어학성적 해당점수 이상 보유자</li>
+                        <li>기술직 - 필수 자격증 소지자</li>
+                    </ul>
+                        <br><br>
+                        <span>전형별 주요 내용</span><br>
+                        <ol>
+                        <li>원서 접수 - 기술직 30배수</li>
+                        <li>서류 전형 - 어학성적(70) + 자격증(50) + 역량기술서(적•부)</li>
+                        어학시험별 만점 기준: TOEIC-800점, TEPS-348점, TOEIC Speaking-140점, OPIC-IM3
+                        <li>필기 전형 - 직업기초능력평가(30%) + 직무수행평가(70%)</li>
+                        <li>면접 전형 - 직무수행에 필요한 역량 종합평가 및 인성 검사</li>
+                        <li>최종 합격자 발표</li>
+                        </ol>
+                    </div></div>
+                </div>
+                <div class="second page">
+                    <h1 class="title">요구되는 스펙</h1>
+                    <article class="스펙">
+                        <div class="포스터 외각 poster_1">
+                            <div class="포스터 내각">
+                                <div>
+                                    <li class="기술_li">서류 전형</li>
+                                    2021년 공개채용 서류 전형 전산직 최소 합격 점수: 90점<br><br>
+
+                                    → 공인영어성적 만점 70점 - TOEIC - 800점<br><br>
+                                    → 전산직 필수 조건 자격증: 정보처리기사<br>
+                                    → 자격증 가산점수 총 50점: 정보처리기사(30점) + 전자계산 &nbsp;&nbsp;&nbsp;&nbsp;기기사, 정보보안기사 등(20점)<br><br>
+
+                                    ⌜여유로운 서류 합격권에 들기 위해 공인영어 성적 만점과 기사 두개 보유⌟
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="포스터 외각 poster_2">
+                            <div class="포스터 내각">
+                                    <div>
+                                        <li class="기술_li">필기 전형</li>
+                                        • 직업기초능력평가 (30%)<br>
+                                        
+                                        → 기술직군: 문제해결능력, 정보능력, 의사소통능력, 수리 &nbsp;&nbsp;&nbsp;&nbsp;능력, 기술능력<br><br>
+                                        • 직무수행능력평가 (70%)<br>
+                                        → 전 산: 데이터베이스, 소프트웨어공학, 운영체계, 정보보안, &nbsp;&nbsp;&nbsp;&nbsp;컴퓨터네트워크<br><br>
+                                        
+                                        ⌜NCS 공부를 하되 직무수행능력 평가의 비중을 더 높인 채로 학습해야 한다.⌟
+                                        
+                                </div>
+                            </div>
+                        </div>
+                        <div class="포스터 외각 poster_3">
+                            <div class="포스터 내각">
+                                <div>
+                                    <li class="기술_li">면접 전형</li>
+                                    → 한국도로공사에서 중요하게 여기는 인재상과 자신의 &nbsp;&nbsp;&nbsp;&nbsp;능력에 빗대어 표현해야한다.<br><br>
+                                    → 전산직렬에 중요한 프로젝트 경험과 직무에 대한 높은 &nbsp;&nbsp;&nbsp;&nbsp;이해도를 바탕으로한 면접질문에 대비해야한다.<br><br>
+                                    → 또한 인성검사에서 검사의 불 일치성 문제로 탈락되는 &nbsp;&nbsp;&nbsp;&nbsp;문제를 막기위해 인성 검사에 대비해야한다.<br>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+                <div class="third page">
+                    <h1 class="title">미래 계획</h1>
+                    
+                    <div class="line li_1"><div class="li_r r_1"><div class="rec re_1"></div></div>
+                        <div class="content">
+                            <li><span>TOICE 800점 달성</span></li>
+                            <li><span>직무 역량을 위한 팀 프로젝 &nbsp;&nbsp;&nbsp;&nbsp;트 완성하기</span></li>
+                        </div>
+                    <div>2023<br>여름방학</div> </div>
+
+                    <div class="line li_2"><div class="li_r r_2"><div class="rec re_2"></div></div>
+                        <div class="content">
+                            <li><span>정보처리기사 시험 준비</span></li>
+                            <li><span>전자계산기기사 시험 준비</span></li>
+                            <li><span>직무 역량을 위한 팀 프로젝 &nbsp;&nbsp;&nbsp;&nbsp;트 완성하기</span></li>
+                        </div>
+                    <div>2023<br>2학기 및 겨울방학</div></div>
+
+                    <div class="line li_3"><div class="li_r r_3"><div class="rec re_3"></div></div>
+                        <div class="content">
+                            <li><span>NCS 직업기초능력평가 준비</span></li>
+                            <li><span>NCS 직무수행평가 준비</span></li>
+                        </div>
+                    <div>2024<br>1학기 및 여름방학</div></div>
+
+                    <div class="line li_4"><div class="li_r r_4"><div class="rec re_4"></div></div>
+                        <div class="content">
+                            <li><span>하반기 공공기관 공개 채용 &nbsp;&nbsp;&nbsp;&nbsp;지원</span></li>
+                        </div>
+                    <div>2024<br>2학기 및 겨울방학</div></div>
+                    
+                    
+                </div>
+            </div>
+            <!-- 페이징 -->
+            <ul class="pagination">
+            </ul>
+            
+        </main>
+    
+        <script>
+            //form을 이용한 오디오 선택
+            var songInput = document.getElementById('song');
+            songInput.addEventListener('input', function() {
+                document.getElementById('audioSource').src = `./music/${this.value}.mp3`;
+                document.getElementById("audioPlayer").load()
+            });
+
+            //사이드 메뉴 오픈 함수
+            function openMenu() {
+                document.getElementById("header").style.marginRight = "250px";
+                document.querySelector('.sidebar').style.width = "250px";
+                document.querySelector('.openbtn').style.display = 'none';
+            }
+            //사이드 메뉴 닫기 함수
+            function closeMenu() { 
+                document.getElementById("header").style.marginRight= "0";
+                document.querySelector('.sidebar').style.width = "0";
+                document.querySelector('.openbtn').style.display = 'block';
+            }
+            //원스크롤 페이지
+            window.onload = () => {
+                const Slider = function(pages, pagination) {
+                    let slides = [],
+                        btns = [],
+                        count = 0,
+                        current = 0,
+                        touchstart = 0,
+                        animation_state = false;
+
+                const init = () => {
+                slides = pages.children;
+                count = slides.length;
+                for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = -(i * 100) + '%';
+                    let btn = document.createElement('li');
+                    btn.dataset.slide = i;
+                    btn.addEventListener('click', btnClick)
+                    btns.push(btn);
+                    pagination.appendChild(btn);
+                }
+                btns[0].classList.add('active');
+                }
+
+                const gotoNum = (index) => {
+                if((index != current) && !animation_state) {
+                    animation_state = true;
+                    setTimeout(() => animation_state = false, 500);
+                    btns[current].classList.remove('active');
+                    current = index;
+                    btns[current].classList.add('active');
+                    for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = (current - i) * 100 + '%';
+                    }
+                }
+                }
+
+                const gotoNext = () => current < count - 1 ? gotoNum(current + 1) : false;
+                const gotoPrev = () => current > 0 ? gotoNum(current - 1) : false;
+                const btnClick = (e) => gotoNum(parseInt(e.target.dataset.slide));
+                pages.ontouchstart = (e) => touchstart = e.touches[0].screenY;
+                pages.ontouchend = (e) => touchstart < e.changedTouches[0].screenY ? gotoPrev() : gotoNext();
+                pages.onmousewheel = pages.onwheel = (e) => e.deltaY < 0 ? gotoPrev() : gotoNext();
+
+                init();
+            }
+
+            let pages = document.querySelector('.pages');
+            let pagination = document.querySelector('.pagination');
+            let slider = new Slider(pages, pagination)
+        }
+
+            function mouseover_cir(class_name) {
+                var poster_1 = document.querySelector(`.poster_${class_name}`);
+                var head_cir_1 = document.querySelector(`.head_circle.cir_${class_name}`);
+                var main_cir_1 = document.querySelector(`.main_circle.cir_${class_name}`);
+
+                poster_1.style.opacity = 1;
+                head_cir_1.style.backgroundColor = '#eeeeee', 0.5
+                main_cir_1.style.backgroundColor = '#bcf3ee', 0.5
+            }
+            function mouseout_cir(class_name) {
+                var poster_1 = document.querySelector(`.poster_${class_name}`);
+                var head_cir_1 = document.querySelector(`.head_circle.cir_${class_name}`);
+                var main_cir_1 = document.querySelector(`.main_circle.cir_${class_name}`);
+
+                poster_1.style.opacity = 0;
+                head_cir_1.style.backgroundColor = '#5e5e5e', 1  
+                main_cir_1.style.backgroundColor = '#d1d1d1', 1
+            }
+            function mouseClick_btn(class_name) {
+                var btn = document.querySelector(`.btn_${class_name}`);
+                var content = document.querySelector(`.${class_name}`);
+
+                var bottom = [];
+                bottom[0] = document.querySelector(".btn_비전");
+                bottom[1] = document.querySelector(".btn_사업");
+                bottom[2] = document.querySelector(".btn_영업이익");
+                bottom[3] = document.querySelector(".btn_보도자료");
+                bottom[4] = document.querySelector(".btn_홍보영상");
+
+                var main = Array(5);
+                main[0] = document.querySelector(".비전");
+                main[1] = document.querySelector(".사업");
+                main[2] = document.querySelector(".영업이익");
+                main[3] = document.querySelector(".보도자료");
+                main[4] = document.querySelector(".홍보영상");
+
+                for (let i = 0; i < 5; i++) {
+                    main[i].style.opacity = 0;
+                    bottom[i].style.backgroundColor = '#cccccc'
+                }
+                document.querySelector(".center").style.opacity = 1;
+                content.style.opacity = 1;
+                btn.style.backgroundColor = '#0059ff4d'
+
+                main[4].style.visibility = "hidden";
+
+                if (class_name=="홍보영상") {
+                    content.style.visibility = "visible";
+                }
+            }
+
+            function mouseover_tir(class_name) {
+                var poster_1 = document.querySelector(`.기술 .poster_${class_name}`);
+                var head_cir_1 = document.querySelector(`.기술 .head_circle.cir_${class_name}`);
+                var main_cir_1 = document.querySelector(`.기술 .main_circle.cir_${class_name}`);
+
+                poster_1.style.opacity = 1;
+                head_cir_1.style.backgroundColor = '#eeeeee', 0.5
+                main_cir_1.style.backgroundColor = '#bcf3ee', 0.5
+            }
+            function mouseout_tir(class_name) {
+                var poster_1 = document.querySelector(`.기술 .poster_${class_name}`);
+                var head_cir_1 = document.querySelector(`.기술 .head_circle.cir_${class_name}`);
+                var main_cir_1 = document.querySelector(`.기술 .main_circle.cir_${class_name}`);
+
+                poster_1.style.opacity = 0;
+                head_cir_1.style.backgroundColor = '#5e5e5e', 1  
+                main_cir_1.style.backgroundColor = '#d1d1d1', 1
+            }
+        </script>
+    </body>
+</html>
