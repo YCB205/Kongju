@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>나를 소개하다</title>
+        <style>
+            html, body {height: 100%; width: 100%; margin-top: 0px; margin-left: 0px;}
+            .scroll::-webkit-scrollbar {display: none;}
+            #header{z-index: 10; position: absolute; width: 100%;}
+            #header>#audioPlayer{position: absolute; right: 90px;  width: 200px; top: 8px; }
+            #header>#audio{position: absolute; right: 300px; top: 9px; display: inline-block;}
+            #header>#audio>#song{width: 50px; border-style: none; border-radius: 25%; height: 50px;}
+
+            #footer{z-index: 10; position: absolute; width: 100%; bottom: 0px;}
+            #footer>div{position: absolute; color: rgb(0, 0, 0); right: 30px; bottom: 0px;}
+            .sidebar {height: 100%; width: 0px;position: fixed;z-index: 20; top: 0; right: 0;background-color: #111;overflow-x: hidden; 
+                transition: 0.5s;/*펼침속도*/
+                padding-top: 60px;}
+            .sidebar a {padding: 8px 8px 8px 32px;text-decoration: none;font-size: 20px;color: #818181; display: block; transition: 0.3s;}
+    
+            /*메뉴열기 hover 시*/
+            .sidebar a:hover {color: #f1f1f1;}
+            .sidebar .closebtn {position: absolute;top: 0;right: 25px;font-size: 36px;margin-left: 50px;}
+            .openbtn {font-size: 15px;cursor: pointer;background-color: #111;color: white;padding: 10px 15px;border: none; position: fixed; top: 10px; right: 10px; z-index: 10;}
+            .openbtn:hover {background-color: #747474;}
+    
+            
+            .pages {
+                height: 100vh;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .page {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                bottom: -100%;
+                transition: bottom .7s;
+            
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            
+            }
+
+            .page:first-child {bottom: 0;}
+
+            .first { background-color: #ffffff;}
+
+            .second {background-color: #8bd1d3;}
+
+            .third {background-color: #eff0f2;}
+
+            .pagination {position: absolute;right: 20px;top: 50%;transform: translateY(-50%);}
+
+            .pagination>li {
+                list-style: none;
+                height: 20px;
+                width: 20px;
+                background: #000000;
+                border-radius: 50%;
+                margin-top: 10px;
+            }
+
+            .pagination>li.active {
+                background: #ffffff;
+            }
+
+            /* 페이지 제목 */
+            .title {
+                width: 100%;
+                position: absolute;
+                top: -5px;
+                left: 100px;
+                display: inline;
+            }
+
+        /* 첫번째 페이지 구성 */
+        .line {position: absolute;left: 1010px; top: 80px; width: 2px; height: 800px; background-color: black; margin: 0 auto;}
+        .circle {position: absolute;top: -10px;width: 20px;height: 20px;border-radius: 50%;background-color: black;}
+        .circle_b {position: absolute;top: 800px;width: 20px;height: 20px;border-radius: 50%;background-color: black;}
+        .circle.left {left: -9px;}
+        .circle.right {right: -9px;}
+        .circle_b.left {left: -9px;} 
+        .circle_b.right { right: -9px;}
+        .list_year >li::marker {content: ' ▶ '; color: rgb(0, 0, 0);}
+
+        .year_19{ position: absolute; left: 900px; top: 220px; }
+        .year_20{ position: absolute; left: 900px; top: 450px; }
+        .year_21{ position: absolute; left: 900px; top: 680px; }
+
+        .list_year > .list_1{ position: absolute; left: 1038px; top: 150px; padding-bottom: 50px; }
+        .list_year > .list_2{ position: absolute; left: 1038px; top: 300px; padding-bottom: 50px; }
+        .list_year > .list_3{ position: absolute; left: 1038px; top: 450px; padding-bottom: 50px; }
+        .list_year > .list_4{ position: absolute; left: 1038px; top: 600px; padding-bottom: 50px; }
+        .list_year > .list_5{ position: absolute; left: 1038px; top: 750px; padding-bottom: 50px; }
+
+
+        .first.page>article>.square>div>h1{font-size: xx-large; padding-top: 15px; padding-left: 10px; text-shadow: 1px 1px 1px rgb(19, 19, 19);}
+        .first.page>article>.square>div>h2{padding-left: 10px; padding-right: 10px;}
+
+        .first.page>.포스터{position: absolute; top: 14%; left: 4%; width: 650px; height: 750px; background-color: #E3CCAE;
+            border: 10px solid; border-color: rgb(0, 0, 0); border-radius: 3%; display: flex; justify-content: center; align-items: center;}
+        .first.page>.포스터>.내각{width: 90%; height: 90%; background-color:  #B8621B; font-size: 16px; font-weight: 800; border-radius: 3%;
+            top: 50%;left: 50%; border: 10px solid; border-color: rgb(0, 0, 0); color: whitesmoke;}
+        .first.page>.포스터>.내각>div{margin-top: 4%; margin-left: 2%; margin-right: 2%;}
+        
+
+        /* 두번째 페이지 구성 */
+        .post {top: 6%; left: 58%; width: 400px;height: 250px; padding: 10px;  font-family: Arial, sans-serif;  line-height: 1.4; box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.3);
+            transform: rotate(-3deg); margin-bottom: 20px; position: relative;}
+        .second.page>.post::before {content: ""; position: absolute; top: -17px; left: 50%; width: 20px; height: 34px; background-color: #ffaa00; transform: translateX(-50%);}
+
+        .post.it_1{background-color: #fca1ce; border: 2px solid #fa50a5; font-size: 50px; font-weight: 900;}
+        .post.it_2{background-color: #fae25b; border: 2px solid #ffaa00; font-size: 50px; font-weight: 900;}
+        .post.it_3{background-color: #90fff9; border: 2px solid #2aaca5; font-size: 50px; font-weight: 900;}
+        .post.content_1{position: absolute; top: 200px; left: 200px;  width: 600px; height: 500px;  opacity: 0; font-size: 20px; font-weight: 600;
+            background-color: #fca1ce; border: 2px solid #fa50a5; transform: rotate(0deg); box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3); }
+        .post.content_2{position: absolute; top: 200px; left: 200px;  width: 600px; height: 500px;  opacity: 0; font-size: 20px; font-weight: 600;
+            background-color: #fae25b; border: 2px solid #ffaa00; transform: rotate(0deg); box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3); }
+        .post.content_3{position: absolute; top: 200px; left: 200px;  width: 600px; height: 500px;  opacity: 0; font-size: 20px; font-weight: 600;
+            background-color: #90fff9; border: 2px solid #2aaca5; transform: rotate(0deg); box-shadow: 8px 8px 5px rgba(0, 0, 0, 0.3); }
+
+        /* 세번째 페이지 구성 */
+        .cir_1{position: absolute;top: 520px; left: 110px; width: 180px;height: 180px;border-radius: 50%;background-color: #588195; text-align: center;
+        font-size: 30px; font-weight: 700; z-index: 1;}
+        .cir_1>p{margin-top: 40%; color: whitesmoke;}
+        .cir_2{position: absolute;top: 265px; left: 70px; width: 180px;height: 180px;border-radius: 50%;background-color: #588195; text-align: center;
+        font-size: 30px; font-weight: 700; z-index: 1;}
+        .cir_2>p{margin-top: 40%;color: whitesmoke;}
+        .cir_3{position: absolute;top: 265px; left: 460px; width: 180px;height: 180px;border-radius: 50%;background-color: #588195; text-align: center;
+        font-size: 30px; font-weight: 700; z-index: 1;}
+        .cir_3>p{margin-top: 40%;color: whitesmoke;}
+        .cir_4{position: absolute;top: 520px; left: 400px; width: 180px;height: 180px;border-radius: 50%;background-color: #588195; text-align: center;
+        font-size: 30px; font-weight: 700; z-index: 1;}
+        .cir_4>p{margin-top: 30%;color: whitesmoke;}
+        .cir_5{position: absolute;top: 130px; left: 260px; width: 180px;height: 180px;border-radius: 50%;background-color: #588195;; text-align: center;
+        font-size: 30px; font-weight: 700; z-index: 1;}
+        .cir_5>p{margin-top: 40%;color: whitesmoke;}
+
+        .pentagon { position: absolute; top: 280px; left: 200px; width: 300px; height: 300px; background-color: #3a6175;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%); text-align: center; z-index: 0;}
+        .pentagon>p{padding-top: 23%; font-size: 20px; font-weight: 700;color: whitesmoke;}
+
+        .third.page>.line {position: absolute;left: 350px; top: 564px; width: 2px; height: 200px; background-color: #ceae88; margin: 0 auto;}
+        .third.page>.line>.circle {position: absolute; }
+        .third.page>.line>.circle.left {left: -9px; top: -10px; width: 20px; height: 20px; border-radius: 50%; background-color: #ceae88;}
+        .third.page>.line>.circle.right {right: -4px; top: -5px; width: 10px; height: 10px; border-radius: 50%; background-color: #3a6175;}
+        
+        .third.page>.post {top: 74%;; left: 7%; width: 400px;height: 200px; padding: 15px;  font-family: Arial, sans-serif;  line-height: 1.4; box-shadow: 4px 4px 3px rgba(0, 0, 0, 0.3);
+            transform: rotate(-1deg); position: relative; border-radius: 10%;}
+        .third.page>.post.it_2{background-color: #ceae88; border: 2px solid #75644f; font-size: 35px; font-weight: 900; color: whitesmoke;}
+
+        .triangle {position: absolute; top: 20%; right: 13%; width: 0; height: 0; 
+            border-left: 400px solid transparent; border-right: 400px solid transparent; border-bottom: 573px solid #e5b299;}
+        .head_main {position: absolute; top: 20%; right: 23%; width: 400px; height: 130px; font-size: 27px; font-weight: 700; text-align: center; background-color: #eff0f2; z-index: 1;}
+        .head_main>div{position: absolute; top: -50px; left: 124px; font-size: 35px; font-weight: 700;}
+        .body_main{position: absolute; top: 40%; right: 18%; width: 600px; height: 430px; font-size: 21px; font-weight: 700;  z-index: 1;}
+        </style>
+    </head>
+    <body class="scroll">
+        <!--사이드 메뉴 영역-->
+    <div class="sidebar">
+        <a class="closebtn" onclick="closeMenu()">×</a>
+        <a href="./main.html">본인소개</a>
+        <a href="./최근 _주요_사회이슈.html">최근 주요 사회 이슈</a>
+        <a href="./기술_및_기업소개.html">기술 및 기업소개</a>
+        <a href="./미래계획.html">미래 계획</a>
+    </div>
+        <!-- 헤더부분 -->
+        <header id="header">
+            <input type="button" value="Menu" class="openbtn" onclick="openMenu()">
+            <form id="audio">
+                <input type="text" list="songs" id="song" value="sing1" onclick="this.value = null">
+                <datalist id="songs">
+                    <option value="sing1">
+                    <option value="sing2">
+                    <option value="sing3">
+                </datalist>
+            </form>
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="./music/sing1.mp3" type="audio/mpeg">
+            </audio>
+        </header>
+        <!-- 하단부분 -->
+        <footer id="footer">
+            <div><h3>성명: 양창배 <br> 학번: 201905162</h3></div>
+        </footer>
+        <!-- 메인 내용 구성 -->
+        <main>
+            <div class="pages">
+                <div class="first page">
+                    <h1 class="title">본인소개</h1>
+                    <h1><span class="year_19">2019</span><span class="year_20">2020</span><span class="year_21">2021</span></h1>
+                    <h2><ul class="list_year">
+                        <li class="list_1">2019년 01월 14일 두연산업 입사</li>
+                        <li class="list_2">2019년 03월 02일 한밭대학교 융합기술학과 입학</li>
+                        <li class="list_3">2020년 12월 31일 두연산업 퇴사</li>
+                        <li class="list_4">2021년 01월 21일 한밭대학교 융합기술학과 학점 4.2 편입 신청</li>
+                        <li class="list_5">2021년 02월 04일  공주대학교 컴퓨터공학부 소프트웨어전공 3학년으로 입학</li>
+                    </ul></h2>
+                        <div class="포스터 외각 poster_1">
+                            <div class="포스터 내각">
+                                <div>
+                                    <div><h1>꾸준한 자기 계발</h1></div>
+                                    <div><h2>처음 사회 경험으로 생산직 업무를 수행했습니다. 이후 약 반년 즈음부터 반복적인 일상으로 스스로가 무뎌지는 느낌을 받았습니다. 
+                                        이에 벗어나고자 작은 자기 계발을 실천했습니다. <br><br>
+                                        사소한 운동과 독서, 영어 공부 등 지정한 목표를 이룰 때 얻는 성취감과 자신감이 좋았기에 더더욱 발전 지향적 성격을 띠게 되었습니다. 
+                                        이후 좋은 기회로 타 회사에서 대학을 지원해준다는 이직 제의가 와서 회사와 대학을 병행했습니다. <br><br>
+                                        초기 업무와는 달리 사내의 환경적 요인으로 다양한 업무를 담당했으나, 각 업무에 성과를 이뤘으며 학업에도 꾸준히 힘을 쓴 결과로 준수한 성적을 이루어냈습니다.<br><br> 
+                                        이러한 경험으로 정체되지 않고 <br>꾸준히 발전해가는 모습을 보여드리겠습니다.</h2></div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="line">
+                    <div class="circle left"></div>
+                    <div class="circle right"></div>
+                    <div class="circle_b left"></div>
+                    <div class="circle_b right"></div>
+                    </div>
+                </div>
+                <div class="second page">
+                    <h2 class="title">프로젝트 중 어려웠던 부분 및 해결 방안</h2>
+                        <div class="post it_1">
+                            <p>프로젝트 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;개요</p>
+                        </div>
+                        <div class="post it_2">
+                            <p>프로젝트 중 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;어려웠던 점</p>
+                        </div>
+                        <div class="post it_3">
+                            <p>해결 방법 및 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;결과</p>
+                        </div>
+
+                        <div class="post content_1"><br>
+                            생산하는데 필요한 도면과 작업수량 및 재고수량 등 사내 제품의 생산 현황과 재고량 확인을 위해 생산자동화시스템 (= MES)를 발주하여 현장에 도입했다. <br><br>
+                            설계팀에서 제품의 도면과 구체적인 규격을 넣어서 제품 정보를 만들고, 생산관리팀에서 제품 정보를 기반으로 생산 카드를 만들면 마무리로 생산팀에서 작업 후 조작하면 생산 카드는 완성된다.<br><br>
+                            완성된 생산 카드를 기반으로 수율을 확인하고, 총 판매량과 영업이익 등을 확인한다.<br><br>
+                            본인은 사내에서 발주한 MES의 QA를 담당했다.
+                        </div>
+                        <div class="post content_2"><br>
+                            회사 내 생산업무를 담당 중인 직원들의 나이 대가 40~50대가 주를 이룬 상황이며 새로운 시스템인 MES를 조작에 대부분 힘겨움을 느꼈다.<br><br>
+                            경영진에서는 MES로 업무적인 성과를 보고 싶어하지만 현장 직원들의 MES 조작 미숙 및 생산카드의 일부 정보 미 입력으로 인한 생산 카드에 기반한 정보가 실제 값과 다른 경우가 빈번했다.<br><br>
+                            MES로 재고관리를 하면서 사용하는 본인도 UI가 복잡하다는 것을 느꼈으며 MES 조작 간소화 및 생산팀 직원들을 위한 작업표준서가 필요하다고 생각했다.
+                        </div>
+                        <div class="post content_3"><br>
+                            먼저 생산팀 직원 분들의 MES 개편사항 의견을 취합하고, 개편 사항 요구서를 작성 후 MES 개발 담당자에게 전달했다. 또한 개발 담당자와 회의하면서 간소화 부분이 가능한 영역을 확인하고 작업을 진행했다. <br><br>
+                            다음으로 수정된 MES에서 생산팀 직원 분들이 쉽게 조작할 수 있도록 작업 표준서를 별도로 만들어서 배포했다. 이때 작업 표준서는 효율적인 이해를 위해 글자 위주가 아닌 MES UI가 주를 이룬 직관적인 형태로 작성했다.<br><br>
+                            결과적으로 생산 팀에서는 생산 카드에서 기반한 오류가 줄어들었으며 MES조작에 소요되는 시간이 대폭 줄어들었다. <br>
+                            재고관리에서는 실제 재고량과 MES에 있는 재고량의 차이가 1~2개 차이로 줄어들었으며 처음 기획대로 수율 및 총 판매량과 영업이익을 일일 별로 확인이 가능해졌다.
+                        </div>
+                </div>
+                <div class="third page">
+                    <h2 class="title">나의 역량 <br> 이루고 싶은 목표와 선정 동기</h2>
+                    <div class="cir_1"><p>재고 관리</p></div><div class="cir_2"><p>기계 설계</p></div><div class="cir_3"><p>생산 관리</p></div>
+                    <div class="cir_4"><p>생산시스템 QA</p></div><div class="cir_5"><p>품질 관리</p></div>
+                    <div class="pentagon"><p><b>다양한 직무 경험으로</b><br><br> 유연한 상황 대처능력<br><br>다양한 시각으로 <br>볼 수 있는 역량</p></div>
+
+                    <div class="line"><div class="circle left"></div><div class="circle right"></div></div>
+                    <div class="post it_2">
+                        <p>사회에서 <u>경쟁력</u> 있는<br>인재달성을 위해 <br> 꾸준한 <u>계획</u> 및 <u> 실천</u></p>
+                    </div>
+                    
+                    <div class="head_main"><div>►목표◄</div><br> 고용안정성이 높은 직장에서 <br>수익 다 변화를 통한 <u>안정적인 삶</u></div>
+                    <div class="triangle"></div><div class="body_main">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       
+                        경기 침체로 인한 고용 불 안<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        정 및 정년에 비해 평균 50살 전<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        에 퇴직하는 사회적 문화로 국민연금<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        을 수령받는 정년 전에 자급자족 할 수 있<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        는 경제 여건 마련이 필요하다고 생각한다. <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        또한 경제적 독립성을 위해 수익 파이프라인을 직<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        장 하나에만 의존하는게 아닌 여러 곳에서 만들 수 있<br>&nbsp;&nbsp;&nbsp;&nbsp;는 능력이 필요하다고 생각한다. <br><br>
+                        따라서 개인의 능력으로 수익 다 변화하기 좋은 it직종을 선택했으며 고용안정성이 높은 직장에 입사하는 것이 목표다.
+                    </div>
+                </div>
+            </div>
+            <!-- 페이징 -->
+            <ul class="pagination">
+            </ul>
+            
+        </main>
+    
+        <script>
+            //form을 이용한 오디오 선택
+            var songInput = document.getElementById('song');
+            songInput.addEventListener('input', function() {
+                document.getElementById('audioSource').src = `./music/${this.value}.mp3`;
+                document.getElementById("audioPlayer").load()
+            });
+
+            //사이드 메뉴 오픈 함수
+            function openMenu() {
+                document.getElementById("header").style.marginRight = "250px";
+                document.querySelector('.sidebar').style.width = "250px";
+                document.querySelector('.openbtn').style.display = 'none';
+            }
+            //사이드 메뉴 닫기 함수
+            function closeMenu() { 
+                document.getElementById("header").style.marginRight= "0";
+                document.querySelector('.sidebar').style.width = "0";
+                document.querySelector('.openbtn').style.display = 'block';
+            }
+            //원스크롤 페이지
+            window.onload = () => {
+                const Slider = function(pages, pagination) {
+                    let slides = [],
+                        btns = [],
+                        count = 0,
+                        current = 0,
+                        touchstart = 0,
+                        animation_state = false;
+
+                const init = () => {
+                slides = pages.children;
+                count = slides.length;
+                for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = -(i * 100) + '%';
+                    let btn = document.createElement('li');
+                    btn.dataset.slide = i;
+                    btn.addEventListener('click', btnClick)
+                    btns.push(btn);
+                    pagination.appendChild(btn);
+                }
+                btns[0].classList.add('active');
+                }
+
+                const gotoNum = (index) => {
+                if((index != current) && !animation_state) {
+                    animation_state = true;
+                    setTimeout(() => animation_state = false, 500);
+                    btns[current].classList.remove('active');
+                    current = index;
+                    btns[current].classList.add('active');
+                    for(let i = 0; i < count; i++) {
+                    slides[i].style.bottom = (current - i) * 100 + '%';
+                    }
+                }
+                }
+
+                const gotoNext = () => current < count - 1 ? gotoNum(current + 1) : false;
+                const gotoPrev = () => current > 0 ? gotoNum(current - 1) : false;
+                const btnClick = (e) => gotoNum(parseInt(e.target.dataset.slide));
+                pages.ontouchstart = (e) => touchstart = e.touches[0].screenY;
+                pages.ontouchend = (e) => touchstart < e.changedTouches[0].screenY ? gotoPrev() : gotoNext();
+                pages.onmousewheel = pages.onwheel = (e) => e.deltaY < 0 ? gotoPrev() : gotoNext();
+
+                init();
+            }
+
+            let pages = document.querySelector('.pages');
+            let pagination = document.querySelector('.pagination');
+            let slider = new Slider(pages, pagination)
+        }
+            //2page post it함수
+            function post_it() {
+                var fir_post = document.querySelector(".it_1");
+               var sec_post = document.querySelector(".it_2");
+               var tir_post = document.querySelector(".it_3");
+
+               var fir_content = document.querySelector(".content_1");
+               var sec_content = document.querySelector(".content_2");
+               var tir_content = document.querySelector(".content_3");
+               fir_post.addEventListener("mouseover",function () {
+                fir_post.style.opacity = 0.5;
+                fir_content.style.opacity = 1;
+                sec_content.style.opacity = 0;
+                tir_content.style.opacity = 0;
+               })
+               sec_post.addEventListener("mouseover",function () {
+                sec_post.style.opacity = 0.5;
+                fir_content.style.opacity = 0;
+                sec_content.style.opacity = 1;
+                tir_content.style.opacity = 0;
+               })
+               tir_post.addEventListener("mouseover",function () {
+                tir_post.style.opacity = 0.5;
+                fir_content.style.opacity = 0;
+                sec_content.style.opacity = 0;
+                tir_content.style.opacity = 1;
+               })
+               fir_post.addEventListener("mouseout",function () {
+                fir_post.style.opacity = 1;
+                fir_content.style.opacity = 0;
+                sec_content.style.opacity = 0;
+                tir_content.style.opacity = 0;
+               })
+               sec_post.addEventListener("mouseout",function () {
+                sec_post.style.opacity = 1;
+                fir_content.style.opacity = 0;
+                sec_content.style.opacity = 0;
+                tir_content.style.opacity = 0;
+               })
+               tir_post.addEventListener("mouseout",function () {
+                tir_post.style.opacity = 1;
+                fir_content.style.opacity = 0;
+                sec_content.style.opacity = 0;
+                tir_content.style.opacity = 0;
+               })
+
+            }
+            post_it();
+
+        </script>
+    </body>
+</html>
